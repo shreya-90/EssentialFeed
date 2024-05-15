@@ -16,10 +16,15 @@ class URLSessionHTTPClient {
         self.session = session
     }
     
+    struct UnexpectedValuesRepresentation: Error {}
+    
     func get(url: URL, completion: @escaping (HTTPCLientResult) -> Void) {
         session.dataTask(with: url) { _,_, error in
+            
             if let error = error  {
                 completion(.failure(error))
+            } else {
+                completion(.failure(UnexpectedValuesRepresentation()))
             }
         }.resume()
         
@@ -68,6 +73,28 @@ final class URLSessionHTTPClientTests: XCTestCase {
                 XCTAssertEqual(receivedError.code, error.code)
             default:
                 XCTFail("Expected failure with \(error), got \(result) instead")
+            }
+            
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
+    //invalid case test to test framework assumptions. These could be helpful if the framework changes.
+    func test_getFromURL_failsOnAllNilValues() {
+                
+        URLProtocolStub.stub(data: nil, response: nil, error: nil)
+                
+        let exp = expectation(description: "wait for get to finish")
+        
+        makeSUT().get(url: anyURL()) { result in
+            switch result {
+            case .failure:
+                break
+                
+            default:
+                XCTFail("Expected failure, got \(result) instead")
             }
             
             exp.fulfill()
