@@ -22,8 +22,7 @@
           "name" : "EssentialFeedAPIEndToEndTests"
         }
       ]
-    },
-    "testExecutionOrdering" : "random"
+    }
   },
   "testTargets" : [
     {
