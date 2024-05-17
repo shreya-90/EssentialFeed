@@ -111,6 +111,7 @@
 		1A811F462BE258EE00203F17 /* EssentialFeed */ = {
 			isa = PBXGroup;
 			children = (
+				1A811F902BF626AF00203F17 /* CI.xctestplan */,
 				1A811F682BE3B45700203F17 /* Feed API */,
 				1A811F632BE26B5000203F17 /* Feed Feature */,
 			);
@@ -120,7 +121,6 @@
 		1A811F522BE258EE00203F17 /* EssentialFeedTests */ = {
 			isa = PBXGroup;
 			children = (
-				1A811F902BF626AF00203F17 /* CI.xctestplan */,
 				1A811F8C2BF61EF900203F17 /* EssentialFeed.xctestplan */,
 				1A811F8B2BF61EF800203F17 /* EssentialFeedAPIEndToEndTests.xctestplan */,
 				1A811F6F2BF234BC00203F17 /* Feed API */,
