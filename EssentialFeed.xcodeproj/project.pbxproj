@@ -92,6 +92,7 @@
 		1A811F3A2BE258EE00203F17 = {
 			isa = PBXGroup;
 			children = (
+				1A7C0BCD2BF78E5D002C8B2A /* CI_macOS.xctestplan */,
 				1A811F462BE258EE00203F17 /* EssentialFeed */,
 				1A811F522BE258EE00203F17 /* EssentialFeedTests */,
 				1A811F452BE258EE00203F17 /* Products */,
@@ -120,7 +121,6 @@
 		1A811F522BE258EE00203F17 /* EssentialFeedTests */ = {
 			isa = PBXGroup;
 			children = (
-				1A7C0BCD2BF78E5D002C8B2A /* CI_macOS.xctestplan */,
 				1A811F8C2BF61EF900203F17 /* EssentialFeed.xctestplan */,
 				1A811F8B2BF61EF800203F17 /* EssentialFeedAPIEndToEndTests.xctestplan */,
 				1A811F6F2BF234BC00203F17 /* Feed API */,
