@@ -17,6 +17,8 @@
 		1A7C0BE12C045CE2002C8B2A /* LoadFeedFromCacheUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7C0BE02C045CE2002C8B2A /* LoadFeedFromCacheUseCaseTests.swift */; };
 		1A7C0BE42C045F3D002C8B2A /* FeedStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7C0BE32C045F3D002C8B2A /* FeedStoreSpy.swift */; };
 		1A7C0BE62C04C028002C8B2A /* ValidateFeedCacheUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7C0BE52C04C028002C8B2A /* ValidateFeedCacheUseCaseTests.swift */; };
+		1A7C0BE82C04C584002C8B2A /* FeedCacheTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7C0BE72C04C584002C8B2A /* FeedCacheTestHelpers.swift */; };
+		1A7C0BEA2C04C62D002C8B2A /* SharedTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7C0BE92C04C62D002C8B2A /* SharedTestHelpers.swift */; };
 		1A811F4F2BE258EE00203F17 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A811F442BE258EE00203F17 /* EssentialFeed.framework */; };
 		1A811F542BE258EE00203F17 /* EssentialFeedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A811F532BE258EE00203F17 /* EssentialFeedTests.swift */; };
 		1A811F5F2BE2590900203F17 /* FeedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A811F5E2BE2590900203F17 /* FeedImage.swift */; };
@@ -61,6 +63,8 @@
 		1A7C0BE02C045CE2002C8B2A /* LoadFeedFromCacheUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadFeedFromCacheUseCaseTests.swift; sourceTree = "<group>"; };
 		1A7C0BE32C045F3D002C8B2A /* FeedStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedStoreSpy.swift; sourceTree = "<group>"; };
 		1A7C0BE52C04C028002C8B2A /* ValidateFeedCacheUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidateFeedCacheUseCaseTests.swift; sourceTree = "<group>"; };
+		1A7C0BE72C04C584002C8B2A /* FeedCacheTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCacheTestHelpers.swift; sourceTree = "<group>"; };
+		1A7C0BE92C04C62D002C8B2A /* SharedTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTestHelpers.swift; sourceTree = "<group>"; };
 		1A811F442BE258EE00203F17 /* EssentialFeed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialFeed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A811F4E2BE258EE00203F17 /* EssentialFeedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A811F532BE258EE00203F17 /* EssentialFeedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EssentialFeedTests.swift; sourceTree = "<group>"; };
@@ -120,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				1A7C0BD42C00A14B002C8B2A /* XCTestCase+MemoryLeakTracking.swift */,
+				1A7C0BE92C04C62D002C8B2A /* SharedTestHelpers.swift */,
 			);
 			name = Helpers;
 			path = EssentialFeedTests/Helpers;
@@ -139,6 +144,7 @@
 			isa = PBXGroup;
 			children = (
 				1A7C0BE32C045F3D002C8B2A /* FeedStoreSpy.swift */,
+				1A7C0BE72C04C584002C8B2A /* FeedCacheTestHelpers.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -383,8 +389,10 @@
 			files = (
 				1A811F672BE36D9B00203F17 /* LoadFeedFromRemoteUseCaseTests.swift in Sources */,
 				1A811F712BF34C1000203F17 /* URLSessionHTTPClientTests.swift in Sources */,
+				1A7C0BEA2C04C62D002C8B2A /* SharedTestHelpers.swift in Sources */,
 				1A7C0BD22BFF66AA002C8B2A /* CacheFeedUseCaseTests.swift in Sources */,
 				1A811F542BE258EE00203F17 /* EssentialFeedTests.swift in Sources */,
+				1A7C0BE82C04C584002C8B2A /* FeedCacheTestHelpers.swift in Sources */,
 				1A7C0BE62C04C028002C8B2A /* ValidateFeedCacheUseCaseTests.swift in Sources */,
 				1A7C0BE42C045F3D002C8B2A /* FeedStoreSpy.swift in Sources */,
 				1A7C0BE12C045CE2002C8B2A /* LoadFeedFromCacheUseCaseTests.swift in Sources */,
