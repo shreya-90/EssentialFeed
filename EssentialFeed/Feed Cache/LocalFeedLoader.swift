@@ -43,7 +43,6 @@ public final class LocalFeedLoader {
             
             switch result {
             case let .failure(error):
-                self.store.deleteCacheFeed { _ in }
                 completion(.failure(error))
                 
                                 
@@ -59,6 +58,11 @@ public final class LocalFeedLoader {
             }
             
         }
+    }
+    
+    public func validateCache() {
+        store.retrieve { _ in }
+        store.deleteCacheFeed { _ in }
     }
     
     public func delete(completion: @escaping (Error?) -> Void) {
