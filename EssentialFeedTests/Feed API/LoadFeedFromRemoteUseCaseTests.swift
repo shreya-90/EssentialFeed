@@ -179,6 +179,7 @@ final class LoadFeedFromRemoteUseCaseTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+
     private class HTTPClientSpy: HTTPCLient {
     
         var messages = [(url: URL, completion: (HTTPCLientResult) -> Void)]()
