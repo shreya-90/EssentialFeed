@@ -52,7 +52,6 @@ class CodableFeedStore {
         let cache = try! decoder.decode(Cache.self, from: data)
         completion(.found(feed: cache.localFeed, timestamp: cache.timestamp))
         
-        
     }
     
     func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping FeedStore.InsertionCompletion) {
@@ -79,21 +78,7 @@ final class CoadableFeedStoreTests: XCTestCase {
     func test_retrieve_deliversEmptyOnEmptyCache() {
         
         let sut = makeSUT()
-        
-        let exp = expectation(description: "Wait for retrieval to complete ...")
-        
-        
-        sut.retrieve { result in
-            switch result {
-            case .empty:
-                break
-            default:
-                XCTFail("Expected empty, got \(result) instead")
-            }
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1.0)
+        expect(sut, toCompleteWith: .empty)
        
     }
     
@@ -129,17 +114,41 @@ final class CoadableFeedStoreTests: XCTestCase {
         
         sut.insert(feed, timestamp: timestamp) { insertionError in
             XCTAssertNil(insertionError,"Expected feed to be inserted successfully")
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
+        
+        expect(sut, toCompleteWith: .found(feed: feed, timestamp: timestamp))
+        
+    }
+    
+    
+    func test_retrieve_hasNoSideEffectsOnNonEmptyCache() {
+        
+        let sut = makeSUT()
+        let feed = uniqueImageFeed().local
+        let timestamp = Date()
+        
+        let exp = expectation(description: "Wait for retrieval to complete ...")
+        
+        sut.insert(feed, timestamp: timestamp) { insertionError in
+            XCTAssertNil(insertionError,"Expected feed to be inserted successfully")
             
-            sut.retrieve { retrieveResult in
-                switch retrieveResult {
-                case let .found(retrievedFeed, retrievedTimestamp):
-                    XCTAssertEqual(retrievedFeed, feed)
-                    XCTAssertEqual(retrievedTimestamp, timestamp)
+            sut.retrieve { firstResult in
+                sut.retrieve { secondResult in               
+                    switch (firstResult, secondResult) {
+                    case let (.found(firstFeed, firstTimestamp), .found(secondFeed, secondTimestamp)):
+                        XCTAssertEqual(firstFeed, feed)
+                        XCTAssertEqual(firstTimestamp, timestamp)
+                        
+                        XCTAssertEqual(secondFeed, feed)
+                        XCTAssertEqual(secondTimestamp, timestamp)
                     
                 default:
-                    XCTFail("Expected found result with feed \(feed) and timestamp \(timestamp), got \(retrieveResult) instead")
+                    XCTFail("Expected retrieving twice from non empty cache to deliver same found result with \(feed) and timestamp \(timestamp), got \(firstResult) and \(secondResult) instead")
                 }
-                exp.fulfill()
+                    exp.fulfill()
+                }
             }
         }
         
@@ -167,5 +176,27 @@ final class CoadableFeedStoreTests: XCTestCase {
     
     private func undoStoreSideEffects() {
         try? FileManager.default.removeItem(at: testSpecifcStoreURL())
+    }
+    
+    private func expect(_ sut: CodableFeedStore, toCompleteWith expectedResult: RetrievedCachedFeedResult, file: StaticString = #filePath, line: UInt = #line) {
+        let exp = expectation(description: "Wait for load...")
+
+        sut.retrieve { retrievedResult in
+            switch (expectedResult, retrievedResult) {
+            case (.empty, .empty):
+                break
+                
+            case let (.found(expected), .found(received)):
+                XCTAssertEqual(expected.feed, received.feed)
+                XCTAssertEqual(expected.timestamp, received.timestamp)
+                
+            default:
+                XCTFail("Expected result \(expectedResult), got \(retrievedResult) instead")
+            }
+            exp.fulfill()
+        }
+
+        wait(for: [exp], timeout: 1.0)
+ 
     }
 }
