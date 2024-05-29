@@ -71,7 +71,19 @@ class CodableFeedStore {
     }
     
     func deleteCacheFeed(completion: @escaping FeedStore.DeletionCompletion) {
-        completion(nil)
+        
+        guard FileManager.default.fileExists(atPath: storeURL.path) else {
+            return completion(nil)
+        }
+        
+        do {
+            try FileManager.default.removeItem(at: storeURL)
+            completion(nil)
+        } catch {
+            completion(error)
+        }
+        
+        
     }
 }
 
@@ -90,7 +102,7 @@ final class CoadableFeedStoreTests: XCTestCase {
     func test_retrieve_deliversEmptyOnEmptyCache() {
         
         let sut = makeSUT()
-        expect(sut, toCompleteWith: .empty)
+        expect(sut, toRetrieveWith: .empty)
        
     }
     
@@ -107,7 +119,7 @@ final class CoadableFeedStoreTests: XCTestCase {
         let timestamp = Date()
         
         insert((feed, timestamp), to: sut)
-        expect(sut, toCompleteWith: .found(feed: feed, timestamp: timestamp))
+        expect(sut, toRetrieveWith: .found(feed: feed, timestamp: timestamp))
     }
     
     
@@ -118,7 +130,7 @@ final class CoadableFeedStoreTests: XCTestCase {
         let timestamp = Date()
         
         insert((feed, timestamp), to: sut)
-        expect(sut, toCompleteWith: .found(feed: feed, timestamp: timestamp))
+        expect(sut, toRetrieveWith: .found(feed: feed, timestamp: timestamp))
     }
     
     func test_retrieve_deliversFailureOnRetrievalError() {
@@ -127,7 +139,7 @@ final class CoadableFeedStoreTests: XCTestCase {
         
         try! "invalid data".write(to: storeURL, atomically: false, encoding: .utf8)
         
-        expect(sut, toCompleteWith: .failure(anyNSError()))
+        expect(sut, toRetrieveWith: .failure(anyNSError()))
     }
     
     func test_retrieve_hasNoSideEffectsOnFailure() {
@@ -150,7 +162,7 @@ final class CoadableFeedStoreTests: XCTestCase {
         let latestInsertionError = insert((latestFeed, latestTimestamp), to: sut)
         
         XCTAssertNil(latestInsertionError, "Expected to override cache successfully")
-        expect(sut, toCompleteWith: .found(feed: latestFeed, timestamp: latestTimestamp))
+        expect(sut, toRetrieveWith: .found(feed: latestFeed, timestamp: latestTimestamp))
     }
     
     func test_insert_deliversErrorOnInsertionError() {
@@ -174,9 +186,22 @@ final class CoadableFeedStoreTests: XCTestCase {
         }
         wait(for: [exp], timeout: 1.0)
         
-        expect(sut, toCompleteWith: .empty)
+        expect(sut, toRetrieveWith: .empty)
     }
     
+    func test_delete_emptiesPreviouslyInsertedCache() {
+        let sut = makeSUT()
+        insert((uniqueImageFeed().local, Date()), to: sut)
+        
+        let exp = expectation(description: "Wait for cache deletion")
+        sut.deleteCacheFeed { deletionError in
+            XCTAssertNil(deletionError, "Expected non-empty cache deletion to succeed")
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
+        
+        expect(sut, toRetrieveWith: .empty)
+    }
     
     //MARK: - Helpers
     func makeSUT(storeURL: URL? = nil, file: StaticString = #filePath, line: UInt = #line) -> CodableFeedStore {
@@ -202,11 +227,11 @@ final class CoadableFeedStoreTests: XCTestCase {
     }
     
     private func expect(_ sut: CodableFeedStore, toRetrieveTwice expectedResult: RetrievedCachedFeedResult, file: StaticString = #filePath, line: UInt = #line) {
-        expect(sut, toCompleteWith: expectedResult, file: file, line: line)
-        expect(sut, toCompleteWith: expectedResult, file: file, line: line)
+        expect(sut, toRetrieveWith: expectedResult, file: file, line: line)
+        expect(sut, toRetrieveWith: expectedResult, file: file, line: line)
     }
     
-    private func expect(_ sut: CodableFeedStore, toCompleteWith expectedResult: RetrievedCachedFeedResult, file: StaticString = #filePath, line: UInt = #line) {
+    private func expect(_ sut: CodableFeedStore, toRetrieveWith expectedResult: RetrievedCachedFeedResult, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for load...")
 
         sut.retrieve { retrievedResult in
