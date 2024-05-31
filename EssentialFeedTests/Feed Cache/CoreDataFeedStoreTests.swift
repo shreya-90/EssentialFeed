@@ -52,7 +52,9 @@ class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpec {
     }
     
     func test_storeSideEffects_runSerially() {
-        
+        let sut = makeSUT()
+
+        assertThatSideEffectsRunSerially(on: sut)
     }
     
     
