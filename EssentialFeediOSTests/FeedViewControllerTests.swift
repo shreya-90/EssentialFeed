@@ -9,7 +9,7 @@ import XCTest
 import UIKit
 import EssentialFeed
 
-final class FeedViewController: UIViewController {
+final class FeedViewController: UITableViewController {
     private var loader: FeedLoader?
     
     convenience init(loader: FeedLoader) {
@@ -18,7 +18,14 @@ final class FeedViewController: UIViewController {
     }
     
     override func viewDidLoad() {
-        loader?.load {_ in }
+        refreshControl = UIRefreshControl()
+        
+        refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
+        load()
+    }
+    
+    @objc private func load() {
+        loader?.load { _ in }
     }
 }
 
@@ -28,7 +35,7 @@ class FeedViewControllerTests: XCTestCase {
     func test_init_doesNotLoadFeed() {
         let (_, loader) = makeSUT()
         
-        XCTAssertEqual(loader.loadCount, 0)
+        XCTAssertEqual(loader.loadCallCount, 0)
     }
     
     func test_viewDidLoad_loadsFeed() {
@@ -36,8 +43,22 @@ class FeedViewControllerTests: XCTestCase {
         
         sut.loadViewIfNeeded()
         
-        XCTAssertEqual(loader.loadCount, 1)
+        XCTAssertEqual(loader.loadCallCount, 1)
     }
+    
+    func test_pullToRefresh_loadsFeed() {
+        let (sut, loader) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        sut.refreshControl?.allTargets.forEach { target in
+                    sut.refreshControl?.actions(forTarget: target, forControlEvent: .valueChanged)?.forEach {
+                        (target as NSObject).perform(Selector($0))
+                    }
+                }
+        XCTAssertEqual(loader.loadCallCount, 2)
+        
+    }
+    
     //MARK:- Helpers
     
     func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
@@ -47,11 +68,12 @@ class FeedViewControllerTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, loader)
     }
+    
     class LoaderSpy: FeedLoader {
-        private(set) var loadCount: Int = 0
+        private(set) var loadCallCount: Int = 0
 
         func load(completion: @escaping (FeedLoader.Result) -> Void) {
-            loadCount += 1
+            loadCallCount += 1
         }
     }
 }
