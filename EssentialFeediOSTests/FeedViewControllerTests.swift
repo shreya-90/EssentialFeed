@@ -150,8 +150,6 @@ class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(view0?.renderedImage, imageData0, "Expected no image state change for first view once second image loading completes successfully")
         XCTAssertEqual(view1?.renderedImage, imageData1, "Expected image for second view once second image loading completes successfully")
     }
-
-
     
     //MARK:- Helpers
 
