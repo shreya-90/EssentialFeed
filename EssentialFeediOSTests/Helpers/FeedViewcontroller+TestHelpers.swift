@@ -60,6 +60,11 @@ extension FeedViewController {
     }
     
     func simulateUserInitiatedFeedReload() {
+        
+        if !isViewLoaded {
+            loadViewIfNeeded()
+            replaceRefreshControlWithFakeRefreshControlForiOS17Support()
+        }
         refreshControl?.simulateUserInitiatedFeedReload()
     }
     
