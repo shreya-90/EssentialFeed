@@ -367,16 +367,6 @@ private extension FeedImageCell {
     }
 }
 
-private extension UIRefreshControl {
-    func simulateUserInitiatedFeedReload() {
-        allTargets.forEach { target in
-            actions(forTarget: target, forControlEvent: .valueChanged)?.forEach {
-                (target as NSObject).perform(Selector($0))
-            }
-        }
-    }
-}
-
 private extension FeedViewController {
     func replaceRefreshControlWithFakeRefreshControlForiOS17Support() {
         let fake = FakeRefreshControl()
