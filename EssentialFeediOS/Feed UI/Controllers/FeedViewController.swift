@@ -8,38 +8,15 @@
 import UIKit
 import EssentialFeed
 
-
-final class FeedRefreshViewController: NSObject {
-    private(set) lazy var view: UIRefreshControl = {
-        let view = UIRefreshControl()
-        view.addTarget(self, action: #selector(refresh), for: .valueChanged)
-        return view
-    }()
-
-    private let feedLoader: FeedLoader
-
-    init(feedLoader: FeedLoader) {
-        self.feedLoader = feedLoader
-    }
-
-    var onRefresh: (([FeedImage]) -> Void)?
-
-    @objc func refresh() {
-        view.beginRefreshing()
-        feedLoader.load { [weak self] result in
-            if let feed = try? result.get() {
-                self?.onRefresh?(feed)
-            }
-            self?.view.endRefreshing()
-        }
-    }
-}
-
 public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching {
     private var refreshController: FeedRefreshViewController?
     private var imageLoader: FeedImageDataLoader?
     
-    private var tableModel = [FeedImage]()
+    private var tableModel = [FeedImage]() {
+        didSet {
+            tableView.reloadData()
+        }
+    }
     private var tasks = [IndexPath: FeedImageDataLoaderTask]()
     
     private var onViewIsAppearing: ((FeedViewController) -> Void)?
@@ -55,8 +32,6 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
         refreshControl = refreshController?.view
         refreshController?.onRefresh = { [weak self] feed in
             self?.tableModel = feed
-            self?.tableView.reloadData()
-           
         }
         tableView.prefetchDataSource = self
         refreshController?.refresh()
