@@ -23,7 +23,7 @@ final class FeedImageCellController: FeedImageView {
         delegate.didRequestImage()
         return cell
     }
-    
+        
     func preload() {
         delegate.didRequestImage()
     }
