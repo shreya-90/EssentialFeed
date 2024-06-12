@@ -76,6 +76,9 @@
                                                             <buttonConfiguration key="configuration" style="plain" title="♻︎">
                                                                 <color key="baseForegroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                             </buttonConfiguration>
+                                                            <connections>
+                                                                <action selector="retryButtonTapped" destination="M7t-pr-Y27" eventType="touchUpInside" id="WWq-Bs-K5e"/>
+                                                            </connections>
                                                         </button>
                                                     </subviews>
                                                     <color key="backgroundColor" red="0.89019607840000003" green="0.89019607840000003" blue="0.89019607840000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -119,6 +122,13 @@ Description Description</string>
                                         <constraint firstItem="l1z-NZ-BMg" firstAttribute="leading" secondItem="8gw-eu-y1o" secondAttribute="leadingMargin" id="pIV-eL-Dkp"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="descriptionLabel" destination="PQy-pW-8BM" id="HJz-98-bcp"/>
+                                    <outlet property="feedImageContainer" destination="pGq-c2-Li9" id="giq-kx-7kx"/>
+                                    <outlet property="feedImageView" destination="csL-0T-U51" id="6qm-75-kHf"/>
+                                    <outlet property="locationContainer" destination="ZbS-zM-ur8" id="tLv-Zv-eaV"/>
+                                    <outlet property="locationLabel" destination="Bsw-x8-fRd" id="lOo-74-Jr3"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
