@@ -54,6 +54,7 @@ private final class FeedViewAdapter: FeedView {
             adapter.presenter = FeedImagePresenter(view: WeakRefVirtualProxy(view), imageTransformer: UIImage.init)
             return view
         }
+        
         guard Thread.isMainThread else  { DispatchQueue.main.async { [weak self] in self?.controller?.refreshControl?.endRefreshing()  }
             return
         }
