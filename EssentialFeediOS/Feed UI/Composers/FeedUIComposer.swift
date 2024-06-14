@@ -65,51 +65,6 @@ private final class FeedViewAdapter: FeedView {
     }
 }
 
-
-private final class WeakRefVirtualProxy<T: AnyObject> {
-    private weak var object: T?
-    
-    init(_ object: T) {
-        self.object = object
-    }
-}
-
-extension WeakRefVirtualProxy: FeedImageView where T: FeedImageView, T.Image == UIImage {
-    func display(_ model: FeedImageViewModel<UIImage>) {
-            object?.display(model)
-        }
-}
-
-extension WeakRefVirtualProxy: FeedLoadingView where T: FeedLoadingView {
-    func display(_ viewModel: FeedLoadingViewModel) {
-        object?.display(viewModel)
-    }
-}
-
-
-private final class FeedLoaderPresentationAdapter: FeedViewControllerDelegate {
-    
-    private let feedLoader: FeedLoader
-    var presenter: FeedPresenter?
-    
-    init(feedLoader: FeedLoader) {
-        self.feedLoader = feedLoader
-    }
-    
-    func didRequestFeedRefresh() {
-        presenter?.didStartLoadingFeed()
-        
-        feedLoader.load { [weak self] result in
-            switch result {
-            case let .success(feed):
-                self?.presenter?.didFinishLoadingFeed(with: feed)
-            case let .failure(error):
-                self?.presenter?.didFinishLoadingWithError(with: error)
-            }
-        }
-    }
-}
-
 private final class FeedImageDataLoaderPresentationAdapter<View: FeedImageView, Image>: FeedImageCellControllerDelegate  where View.Image == Image {
     
     private let model: FeedImage
